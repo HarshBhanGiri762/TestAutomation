@@ -23,31 +23,27 @@ public class BrowserStackTest1 {
     public static String  ACCESSKEY = "Np8vqK1BqxpFsYeu1vUJ";
     public static String URL = "https://"+USERNAMSE+":"+ACCESSKEY+"@hub.browserstack.com/wd/hub";
     int noOfArticles = 5;
-//    @BeforeMethod
-//    public void setup() {
-//        WebDriverManager.chromedriver().setup();
-//        driver = new ChromeDriver();
-//        driver.manage().window().maximize();
-//        elPaisPage = new ElPaisPage(driver);
-//        driver.get("https://elpais.com");
-//    }
+
     @Test
-    public void oprnSTD() throws MalformedURLException {
+    public void singleThread() throws MalformedURLException {
         DesiredCapabilities capability = new DesiredCapabilities();
         capability.setPlatform(Platform.MAC);
-        capability.setBrowserName("firefox");
-        capability.setVersion("57");
+        capability.setBrowserName("Chrome");
+        capability.setVersion("latest");
 
         URL browserStackURL = new URL(URL);
         WebDriver driver = new RemoteWebDriver(browserStackURL,capability);
 
-
+        driver.manage().window().maximize();
         driver.get("https://elpais.com/");
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-//        String text = driver.getCurrentUrl();
-//        String test1 = "https://elpais.com/";
-//        Assert.assertEquals(text,test1,"same");
-//        driver.quit();
+        elPaisPage = new ElPaisPage(driver);
+        boolean isLangSpanish = elPaisPage.isSpanishLanguage();
+        Assert.assertTrue(isLangSpanish, "Page language is NOT set to Spanish!");
+        // Check if common Spanish keywords are present
+        boolean isSpanishTextVisible = elPaisPage.isSpanishTextDisplayed();
+        Assert.assertTrue(isSpanishTextVisible, "Spanish content not detected on the page!");
+        System.out.println("Website is correctly displayed in Spanish.");
+
         System.out.println("Navigating to El País homepage...");
         // Accept cookies
         elPaisPage.acceptCookies();
@@ -65,7 +61,7 @@ public class BrowserStackTest1 {
     @AfterTest
     public void closeBrowser() {
         // Close the browser at the end of the test
-        driver.quit();  // Assuming driver is your WebDriver instance
+        driver.quit();
         System.out.println("Browser closed.");
     }
 }

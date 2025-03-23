@@ -20,8 +20,8 @@ import java.util.*;
 
 public class ElPaisPage {
     private WebDriver driver;
-    //private static final String RAPID_API_KEY = "7a57c73375msh39b7e2e70efc2b6p1c6e5djsn287588520789";  // Translate API key 1
-    private static final String RAPID_API_KEY = "b957a10142mshff8897d0e3ecef6p1f2b38jsne7a045718917";  // Translate API key 2
+    private static final String RAPID_API_KEY = "7a57c73375msh39b7e2e70efc2b6p1c6e5djsn287588520789";  // Translate API key 1
+    //private static final String RAPID_API_KEY = "b957a10142mshff8897d0e3ecef6p1f2b38jsne7a045718917";  // Translate API key 2
     private static final String RAPID_API_HOST = "rapid-translate-multi-traduction.p.rapidapi.com";
 
     public ElPaisPage(WebDriver driver){
@@ -69,12 +69,11 @@ public class ElPaisPage {
         List<String> titles = new ArrayList<>();
         int count = 0;
         for (WebElement article : articles) {
-            if (count >= noOfArticles) break;
+            if (count >= 5) break;
             try {
-                String title = article.findElement(By.xpath("//h2")).getText();
+                String title = article.findElement(By.xpath(".//h2")).getText();
                 titles.add(title);
-                String content = article.findElement(By.xpath("//p")).getText();
-                // Dummy Spanish translation
+                String content = article.findElement(By.xpath(".//p")).getText();
                 String spanishContent = "SPANISH: " + content;
                 String imagePath = "No Image";
                 try {
@@ -189,59 +188,6 @@ public class ElPaisPage {
         if (!found) {
             System.out.println("No words repeated more than twice.");
         }
-    }
-
-
-
-
-
-
-    //Method returns List of titles
-    public List<String> scrapeArticles(int articleCount) {
-        System.out.println("Scraping up to " + articleCount + " articles...");
-
-        List<String> titles = new ArrayList<>();   // List to store article titles
-
-        try {
-            driver.get("https://elpais.com/");
-            Thread.sleep(3000);
-
-            //Accept cookies if present
-            try {
-                WebElement acceptButton = driver.findElement(By.xpath("//button[@id='didomi-notice-agree-button']"));
-                acceptButton.click();
-                System.out.println("Cookies accepted.");
-            } catch (NoSuchElementException e) {
-                System.out.println("No cookie popup found.");
-            }
-
-            //Navigate to the Opinion section
-            driver.findElement(By.xpath("//div[@class='sm _df']/.//a[@href='https://elpais.com/opinion/']")).click();
-            Thread.sleep(3000);
-
-            // Find articles
-            List<WebElement> articles = driver.findElements(By.cssSelector("article"));
-
-            int count = 0;
-            for (WebElement article : articles) {
-                if (count >= articleCount) break;  // Limit the number of articles to scrape
-
-                try {
-                    String title = article.findElement(By.cssSelector("h2")).getText();
-                    titles.add(title);  // Store title in the list
-                    System.out.println("Scraped: " + title);
-
-                    count++;
-
-                } catch (Exception e) {
-                    System.out.println("Error scraping article: " + e.getMessage());
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return titles;
     }
 
 }
