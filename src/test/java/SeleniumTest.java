@@ -11,7 +11,7 @@ public class SeleniumTest {
     //WebDriver driver;
     private WebDriver driver;
     private ElPaisPage elPaisPage;
-    int noOfArticles = 1;
+    int noOfArticles = 5;
 
     @BeforeMethod
     public void setup() {
